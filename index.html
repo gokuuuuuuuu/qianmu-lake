@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>千亩湖居墅区 · 天然氧吧实时监测</title>
+  </head>
+  <body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="page">
+      <div class="topbar">
+        <div class="tb-brand">
+          <div class="tb-name">千亩湖居墅区</div>
+          <div class="tb-sub">天然氧吧 · 实时监测系统</div>
+        </div>
+        <div class="tb-right">
+          <div class="live-pill">
+            <span class="live-dot"></span>LIVE · 实时监测
+          </div>
+          <div class="tb-time" id="topTime">—</div>
+        </div>
+      </div>
+      <div class="top-row">
+        <div class="col-meter">
+          <div class="meter-stage">
+            <canvas id="bubbleCanvas" width="340" height="340"></canvas>
+            <canvas id="ringCanvas" width="340" height="340"></canvas>
+            <div class="meter-inner">
+              <div class="meter-lbl">当前负氧离子浓度</div>
+              <div class="meter-val" id="anionValue">—</div>
+              <div class="meter-unit">个 / m³</div>
+              <div class="meter-tag" id="levelTag">检测中...</div>
+            </div>
+          </div>
+          <div class="meter-stats">
+            <div class="ms">
+              <div class="ms-num">51%</div>
+              <div class="ms-lbl">绿 化 率</div>
+            </div>
+            <div class="ms-div"></div>
+            <div class="ms">
+              <div class="ms-num">1.8</div>
+              <div class="ms-lbl">容 积 率</div>
+            </div>
+            <div class="ms-div"></div>
+            <div class="ms">
+              <div class="ms-num">10000+</div>
+              <div class="ms-lbl">亩 湿 地</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-chart">
+          <div class="ch-head">
+            <div>
+              <div class="ch-eye">Live Data · Continuous Update</div>
+              <div class="ch-title">实时数据&ensp;历史走势</div>
+            </div>
+            <div class="ch-ctrls">
+              <button class="c-btn active" data-range="24h">24h</button>
+              <button class="c-btn" data-range="7d">7天</button>
+              <button class="c-btn" data-range="30d">30天</button>
+            </div>
+          </div>
+          <canvas id="chartCanvas"></canvas>
+          <div class="play-row">
+            <button class="play-btn" id="playBtn">▶</button>
+            <div class="tl-track" id="tlTrack">
+              <div class="tl-prog" id="tlProg"></div>
+              <div class="tl-thumb" id="tlThumb"></div>
+            </div>
+            <div class="tl-time" id="tlTime">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <div class="sc-header">
+          <div class="sc-title">负氧离子浓度&ensp;健康参考标准</div>
+          <div class="sc-eye">Ion Concentration Reference</div>
+        </div>
+        <div class="sc-groups">
+          <div class="sc-group">
+            <div class="sc-group-head">
+              <div class="sc-cat">森林瀑布</div>
+              <div class="sc-eff g">增强免疫力</div>
+            </div>
+            <div class="sc-bars">
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf1"></div>
+                </div>
+                <div class="sc-range">≥ 10000</div>
+              </div>
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf2"></div>
+                </div>
+                <div class="sc-range">2000–10000</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-group">
+            <div class="sc-group-head">
+              <div class="sc-cat">城市公园</div>
+              <div class="sc-eff n">满足基本需求</div>
+            </div>
+            <div class="sc-bars">
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf3"></div>
+                </div>
+                <div class="sc-range">1000–2000</div>
+              </div>
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf4"></div>
+                </div>
+                <div class="sc-range">500–1000</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-group">
+            <div class="sc-group-head">
+              <div class="sc-cat">城市住宅</div>
+              <div class="sc-eff b">诱发疾病风险</div>
+            </div>
+            <div class="sc-bars">
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf5"></div>
+                </div>
+                <div class="sc-range">200–500</div>
+              </div>
+              <div class="sc-bar-row">
+                <div class="sc-bar-track">
+                  <div class="sc-bar-fill bf6"></div>
+                </div>
+                <div class="sc-range">25–200</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="footer-left">
+          万亩湿地公园&emsp;畅享健康呼吸<span
+            >千亩湖居墅区 · 自然与生活的极致融合</span
+          >
+        </div>
+        <div class="footer-meta">
+          <div class="fm">
+            <div class="fm-key">数据更新时间</div>
+            <div class="fm-val" id="updateTime">—</div>
+          </div>
+          <div class="fm">
+            <div class="fm-key">监测认证机构</div>
+            <div class="fm-val">国家环境空气质量监测网</div>
+          </div>
+          <div class="fm">
+            <div class="fm-key">传感器型号</div>
+            <div class="fm-val">ECO-ION Pro X3 · ±2%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
