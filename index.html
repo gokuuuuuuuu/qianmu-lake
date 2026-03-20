@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>千亩湖居墅区 · 天然氧吧实时监测</title>
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
-  <body>
+  <body style="visibility: hidden">
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.style.visibility = "visible";
+      });
+    </script>
     <canvas id="bgCanvas"></canvas>
     <div class="page">
       <div class="topbar">
@@ -54,11 +60,6 @@
             <div>
               <div class="ch-eye">Live Data · Continuous Update</div>
               <div class="ch-title">实时数据&ensp;历史走势</div>
-            </div>
-            <div class="ch-ctrls">
-              <button class="c-btn active" data-range="24h">24h</button>
-              <button class="c-btn" data-range="7d">7天</button>
-              <button class="c-btn" data-range="30d">30天</button>
             </div>
           </div>
           <canvas id="chartCanvas"></canvas>
@@ -150,14 +151,6 @@
           <div class="fm">
             <div class="fm-key">数据更新时间</div>
             <div class="fm-val" id="updateTime">—</div>
-          </div>
-          <div class="fm">
-            <div class="fm-key">监测认证机构</div>
-            <div class="fm-val">国家环境空气质量监测网</div>
-          </div>
-          <div class="fm">
-            <div class="fm-key">传感器型号</div>
-            <div class="fm-val">ECO-ION Pro X3 · ±2%</div>
           </div>
         </div>
       </div>

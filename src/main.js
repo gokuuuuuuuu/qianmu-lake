@@ -1,4 +1,5 @@
 import "./style.css";
+import { io } from "socket.io-client";
 
 ("use strict");
 
@@ -278,17 +279,14 @@ setTimeout(() => {
 //  DATA & REALTIME
 // ════════════════════════════════════════
 const LEVELS = [
-  { min: 10000, label: "森林瀑布级", color: "#189858" },
-  { min: 2000, label: "自然清新级", color: "#20a860" },
-  { min: 1000, label: "城市公园级", color: "#46bc7e" },
-  { min: 500, label: "基础达标级", color: "#987010" },
-  { min: 200, label: "偏低风险级", color: "#ae3c2c" },
-  { min: 0, label: "高危预警级", color: "#941818" },
+  { min: 2000, label: "森林瀑布", color: "#189858" },
+  { min: 500, label: "城市公园", color: "#987010" },
+  { min: 0, label: "城市住宅", color: "#ae3c2c" },
 ];
 const getLevel = (v) =>
   LEVELS.find((l) => v >= l.min) || LEVELS[LEVELS.length - 1];
 
-let curVal = 8200;
+let curVal = 0;
 
 function animNum(from, to, el) {
   const t0 = performance.now(),
@@ -313,33 +311,30 @@ function updateDisplay(val) {
 
 updateDisplay(curVal);
 
-async function fetchAnion() {
-  try {
-    const res = await fetch("/api/anion");
-    const data = await res.json();
-    return data;
-  } catch {
-    // 接口不可用时使用本地模拟
-    return {
-      value: Math.round(
-        8500 +
-          (Math.random() - 0.5) * 1400 +
-          Math.sin(Date.now() / 55000) * 900,
-      ),
-      updateTime: new Date().toLocaleString("zh-CN"),
-    };
-  }
-}
+// ── Socket.IO 实时连接 ──
+const socket = io();
 
-async function tick() {
-  const data = await fetchAnion();
-  updateDisplay(data.value);
-  pushLive(data.value);
-  document.getElementById("updateTime").textContent = data.updateTime;
-  document.getElementById("topTime").textContent = data.updateTime;
-}
-setInterval(tick, 3000);
-tick();
+socket.on("connect", () => {
+  console.log("[Socket.IO] 已连接");
+});
+
+socket.on("ws-message", (msg) => {
+  try {
+    const data = JSON.parse(msg);
+    const value = Number(data.ion_value) || 0;
+    const updateTime = data.update_time || new Date().toLocaleString("zh-CN");
+    updateDisplay(value);
+    pushLive(value);
+    document.getElementById("updateTime").textContent = updateTime;
+    document.getElementById("topTime").textContent = updateTime;
+  } catch (e) {
+    console.warn("[Socket.IO] 消息解析失败", e);
+  }
+});
+
+socket.on("disconnect", () => {
+  console.log("[Socket.IO] 连接断开，自动重连中...");
+});
 
 // ════════════════════════════════════════
 //  CHART
@@ -353,58 +348,7 @@ let cD = [],
   piv = null,
   liveMode = true;
 
-function genData(r) {
-  const d = [],
-    l = [],
-    pts = r === "24h" ? 48 : r === "7d" ? 84 : 120,
-    base = r === "24h" ? 8000 : r === "7d" ? 7500 : 7000;
-  for (let i = 0; i < pts; i++) {
-    const t = i / pts;
-    d.push(
-      Math.max(
-        1800,
-        Math.round(
-          base +
-            Math.sin(t * Math.PI * 2 * (r === "24h" ? 1 : 7)) * 1300 +
-            Math.sin(t * Math.PI) * 650 +
-            (Math.random() - 0.5) * 900,
-        ),
-      ),
-    );
-    if (r === "24h") {
-      const h = Math.floor(i * 0.5),
-        m = (i % 2) * 30;
-      l.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
-    } else if (r === "7d") {
-      l.push(
-        `D${Math.floor(i / 12) + 1} ${String((i % 12) * 2).padStart(2, "0")}h`,
-      );
-    } else {
-      l.push(`Day${Math.floor(i / 4) + 1}`);
-    }
-  }
-  return { d, l };
-}
-
-function setRange(r, btn) {
-  document
-    .querySelectorAll(".c-btn")
-    .forEach((b) => b.classList.remove("active"));
-  btn.classList.add("active");
-  const g = genData(r);
-  cD = g.d;
-  cL = g.l;
-  pbI = cD.length - 1;
-  liveMode = true;
-  stopPlay();
-  drawChart(pbI);
-  updateTL();
-}
-
-const g0 = genData("24h");
-cD = g0.d;
-cL = g0.l;
-pbI = cD.length - 1;
+pbI = 0;
 
 function pushLive(val) {
   const now = new Date();
@@ -415,10 +359,14 @@ function pushLive(val) {
   if (cD.length > 72) {
     cD.shift();
     cL.shift();
+    // 播放中时修正索引，防止偏移
+    if (playing && pbI > 0) pbI--;
   }
-  pbI = cD.length - 1;
-  if (liveMode) drawChart(pbI);
-  updateTL();
+  if (liveMode) {
+    pbI = cD.length - 1;
+    drawChart(pbI);
+    updateTL();
+  }
 }
 
 function resizeChart() {
@@ -581,9 +529,6 @@ function seekTL(e) {
 }
 
 // Event listeners
-document.querySelectorAll(".c-btn").forEach((btn) => {
-  btn.addEventListener("click", () => setRange(btn.dataset.range, btn));
-});
 document.getElementById("playBtn").addEventListener("click", togglePlay);
 document.getElementById("tlTrack").addEventListener("click", seekTL);
 
