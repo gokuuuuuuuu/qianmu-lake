@@ -83,6 +83,7 @@ function connectRemoteWS() {
 
   remoteWs.on("message", (data) => {
     const msg = data.toString();
+    console.log(msg,'msg1');
     io.emit("ws-message", msg);
     // 收到真实数据，重置超时计时器
     resetDataTimeout();

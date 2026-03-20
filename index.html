@@ -4,16 +4,195 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>千亩湖居墅区 · 天然氧吧实时监测</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="/src/style.css" />
+    <style>
+      /* ── Loading Screen ── */
+      #loadingScreen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef8f2;
+        transition: opacity 0.6s ease;
+      }
+      #loadingScreen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #loadingBg,
+      #loadingBubbles {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      #loadingBg {
+        z-index: 0;
+      }
+      #loadingBubbles {
+        z-index: 1;
+      }
+      .ld-card {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        text-align: center;
+        animation: ldFadeIn 0.9s 0.3s ease both;
+      }
+      .ld-logo-ring {
+        width: 90px;
+        height: 90px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #ldRing {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .ld-logo-dot {
+        position: relative;
+        z-index: 2;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(42, 168, 102, 0.15);
+        border: 1.5px solid rgba(42, 168, 102, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ld-logo-dot::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #2aa866;
+        box-shadow: 0 0 8px rgba(42, 168, 102, 0.6);
+        animation: ldPulse 2s ease-in-out infinite;
+      }
+      .ld-name {
+        font-family: "DM Serif Display", serif;
+        font-size: 26px;
+        letter-spacing: 0.12em;
+        color: #0b3820;
+      }
+      .ld-sub {
+        font-size: 10px;
+        letter-spacing: 0.26em;
+        color: #78b494;
+        text-transform: uppercase;
+      }
+      .ld-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 2px;
+      }
+      .ld-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .ld-dots span {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #2aa866;
+        animation: ldBounce 1.4s ease-in-out infinite;
+      }
+      .ld-dots span:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .ld-dots span:nth-child(3) {
+        animation-delay: 0.36s;
+      }
+      .ld-text {
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        color: #78b494;
+      }
+      .ld-prog-wrap {
+        width: 200px;
+        height: 2px;
+        background: #c8e8d4;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .ld-prog-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #1a7a4a, #2aa866, #6dc69a);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.3s;
+      }
+
+      @keyframes ldPulse {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scale(0.9);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      }
+      @keyframes ldBounce {
+        0%,
+        80%,
+        100% {
+          transform: scale(0.7);
+          opacity: 0.35;
+        }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes ldFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
-  <body style="visibility: hidden">
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        document.body.style.visibility = "visible";
-      });
-    </script>
+  <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+      <canvas id="loadingBg"></canvas>
+      <canvas id="loadingBubbles"></canvas>
+      <div class="ld-card" style="margin-top: 45vh">
+        <div class="ld-name">Deer Creek Utopia</div>
+        <div class="ld-sub">天然氧吧 · 负氧离子实时监测系统</div>
+        <div class="ld-row">
+          <div class="ld-dots"><span></span><span></span><span></span></div>
+          <div class="ld-text">系统初始化中</div>
+        </div>
+        <div class="ld-prog-wrap">
+          <div class="ld-prog-bar" id="ldProgBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Page (hidden until ready) -->
     <canvas id="bgCanvas"></canvas>
-    <div class="page">
+    <div class="page" style="opacity: 0; transition: opacity 0.5s">
       <div class="topbar">
         <div class="tb-brand">
           <div class="tb-name">千亩湖居墅区</div>
@@ -155,6 +334,143 @@
         </div>
       </div>
     </div>
+
+    <!-- Loading Animation Script -->
+    <script>
+      (function () {
+        const rnd = (a, b) => a + Math.random() * (b - a),
+          PI2 = Math.PI * 2;
+        const bgC = document.getElementById("loadingBg"),
+          bgX = bgC.getContext("2d");
+        const bubC = document.getElementById("loadingBubbles"),
+          bubX = bubC.getContext("2d");
+        let W, H;
+        function resize() {
+          W = bgC.width = bubC.width = innerWidth;
+          H = bgC.height = bubC.height = innerHeight;
+        }
+        resize();
+        addEventListener("resize", resize);
+
+        const blobs = Array.from({ length: 6 }, () => ({
+          x: rnd(0.1, 0.9),
+          y: rnd(0.1, 0.9),
+          rx: rnd(160, 320),
+          ry: rnd(80, 160),
+          hue: rnd(134, 158),
+          sat: rnd(34, 52),
+          lit: rnd(74, 84),
+          alpha: rnd(0.04, 0.09),
+          vx: rnd(-0.00007, 0.00007),
+          vy: rnd(-0.00005, 0.00005),
+        }));
+
+        function mkBub() {
+          return {
+            x: rnd(W * 0.03, W * 0.97),
+            y: H * 0.67 + rnd(0, H * 0.33),
+            r: rnd(4, 24),
+            vy: -rnd(0.4, 1.05),
+            vx: rnd(-0.18, 0.18),
+            wobble: rnd(0, PI2),
+            ws: rnd(0.012, 0.03),
+            wa: rnd(0.3, 1.1),
+            hue: rnd(134, 162),
+            alpha: rnd(0.2, 0.62),
+            scale: 0,
+            scaleSpeed: rnd(0.018, 0.042),
+            delay: rnd(0, 220) | 0,
+            alive: false,
+          };
+        }
+        let bubbles = Array.from({ length: 130 }, mkBub);
+
+        function loop() {
+          if (!document.getElementById("loadingScreen")) return;
+          // bg
+          bgX.clearRect(0, 0, W, H);
+          bgX.fillStyle = "#eef8f2";
+          bgX.fillRect(0, 0, W, H);
+          blobs.forEach((b) => {
+            b.x += b.vx;
+            b.y += b.vy;
+            if (b.x < -0.15) b.x = 1.15;
+            if (b.x > 1.15) b.x = -0.15;
+            if (b.y < -0.15) b.y = 1.15;
+            if (b.y > 1.15) b.y = -0.15;
+            bgX.save();
+            bgX.translate(b.x * W, b.y * H);
+            bgX.scale(1, b.ry / b.rx);
+            const gr = bgX.createRadialGradient(0, 0, 0, 0, 0, b.rx);
+            gr.addColorStop(0, `hsla(${b.hue},${b.sat}%,${b.lit}%,${b.alpha})`);
+            gr.addColorStop(1, `hsla(${b.hue},${b.sat}%,${b.lit}%,0)`);
+            bgX.fillStyle = gr;
+            bgX.beginPath();
+            bgX.arc(0, 0, b.rx, 0, PI2);
+            bgX.fill();
+            bgX.restore();
+          });
+          // bubbles
+          bubX.clearRect(0, 0, W, H);
+          bubbles.forEach((b, i) => {
+            if (!b.alive) {
+              if (--b.delay <= 0) b.alive = true;
+              else return;
+            }
+            if (b.scale < 1) b.scale = Math.min(1, b.scale + b.scaleSpeed);
+            b.wobble += b.ws;
+            b.x += b.vx + Math.sin(b.wobble) * b.wa;
+            b.y += b.vy;
+            if (b.y < -b.r * 3) {
+              Object.assign(b, mkBub());
+              b.x = rnd(W * 0.03, W * 0.97);
+              b.y = H * 0.67 + rnd(0, H * 0.33);
+              b.alive = true;
+              b.delay = rnd(0, 30) | 0;
+              b.scale = 0;
+              return;
+            }
+            const r = b.r * b.scale;
+            if (r < 1) return;
+            const a = b.alpha * b.scale * Math.min(1, b.y / (H * 0.15));
+            if (a < 0.01) return;
+            bubX.beginPath();
+            bubX.arc(b.x, b.y, r, 0, PI2);
+            bubX.strokeStyle = `hsla(${b.hue},52%,44%,${a * 0.85})`;
+            bubX.lineWidth = Math.max(0.7, r * 0.085);
+            bubX.stroke();
+            const ig = bubX.createRadialGradient(
+              b.x - r * 0.22,
+              b.y - r * 0.26,
+              0,
+              b.x,
+              b.y,
+              r,
+            );
+            ig.addColorStop(0, `hsla(${b.hue},60%,82%,${a * 0.48})`);
+            ig.addColorStop(0.6, `hsla(${b.hue},50%,60%,${a * 0.13})`);
+            ig.addColorStop(1, `hsla(${b.hue},46%,52%,0)`);
+            bubX.fillStyle = ig;
+            bubX.fill();
+            if (r > 4) {
+              bubX.beginPath();
+              bubX.arc(b.x - r * 0.24, b.y - r * 0.28, r * 0.22, 0, PI2);
+              bubX.fillStyle = `rgba(255,255,255,${a * 0.55})`;
+              bubX.fill();
+            }
+            if (r > 11) {
+              bubX.beginPath();
+              bubX.arc(b.x + r * 0.25, b.y + r * 0.18, r * 0.09, 0, PI2);
+              bubX.fillStyle = `rgba(255,255,255,${a * 0.24})`;
+              bubX.fill();
+            }
+          });
+          requestAnimationFrame(loop);
+        }
+        loop();
+      })();
+    </script>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

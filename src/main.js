@@ -311,11 +311,31 @@ function updateDisplay(val) {
 
 updateDisplay(curVal);
 
+// ── Loading Screen 控制 ──
+let dataReady = false;
+const ldProgBar = document.getElementById("ldProgBar");
+
+function dismissLoading() {
+  if (dataReady) return;
+  dataReady = true;
+  if (ldProgBar) ldProgBar.style.width = "100%";
+  setTimeout(() => {
+    const ls = document.getElementById("loadingScreen");
+    if (ls) {
+      ls.classList.add("fade-out");
+      setTimeout(() => ls.remove(), 700);
+    }
+    const page = document.querySelector(".page");
+    if (page) page.style.opacity = "1";
+  }, 300);
+}
+
 // ── Socket.IO 实时连接 ──
 const socket = io();
 
 socket.on("connect", () => {
   console.log("[Socket.IO] 已连接");
+  if (ldProgBar) ldProgBar.style.width = "60%";
 });
 
 socket.on("ws-message", (msg) => {
@@ -327,6 +347,8 @@ socket.on("ws-message", (msg) => {
     pushLive(value);
     document.getElementById("updateTime").textContent = updateTime;
     document.getElementById("topTime").textContent = updateTime;
+    // 收到第二条数据（折线图开始绘制）后关闭加载页
+    if (cD.length >= 2) dismissLoading();
   } catch (e) {
     console.warn("[Socket.IO] 消息解析失败", e);
   }
@@ -387,10 +409,13 @@ function drawChart(upto) {
     cw = W - P.l - P.r,
     ch = H - P.t - P.b;
   const sl = cD.slice(0, upto + 1);
-  if (sl.length < 2) return;
-  const mn = Math.min(...sl) * 0.88,
-    mx = Math.max(...sl) * 1.06;
-  const tx = (i) => P.l + (i / (cD.length - 1)) * cw,
+  if (sl.length < 1) return;
+  const rawMn = Math.min(...sl) * 0.88,
+    rawMx = Math.max(...sl) * 1.06;
+  const mn = rawMn === rawMx ? rawMn - 1 : rawMn,
+    mx = rawMn === rawMx ? rawMx + 1 : rawMx;
+  const tx = (i) =>
+      P.l + (cD.length <= 1 ? cw / 2 : (i / (cD.length - 1)) * cw),
     ty = (v) => P.t + ch - ((v - mn) / (mx - mn)) * ch;
 
   // grid
