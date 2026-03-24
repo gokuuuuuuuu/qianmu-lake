@@ -30,10 +30,10 @@ function initBG() {
     y: rnd(0.05, 0.9),
     rx: rnd(180, 320),
     ry: rnd(80, 160),
-    hue: rnd(134, 158),
-    sat: rnd(34, 52),
-    lit: rnd(74, 84),
-    alpha: rnd(0.04, 0.09),
+    hue: rnd(210, 230),
+    sat: rnd(50, 70),
+    lit: rnd(18, 30),
+    alpha: rnd(0.15, 0.3),
     vx: rnd(-0.00006, 0.00006),
     vy: rnd(-0.00005, 0.00005),
   }));
@@ -47,7 +47,7 @@ function mkMote() {
     r: rnd(0.4, 1.6),
     vx: rnd(-0.05, 0.05),
     vy: rnd(-0.09, -0.015),
-    hue: rnd(130, 160),
+    hue: rnd(200, 230),
     alpha: rnd(0.04, 0.14),
     life: rnd(0, 1),
     decay: rnd(0.001, 0.0035),
@@ -61,7 +61,7 @@ initBG();
 
 function drawBG() {
   bgX.clearRect(0, 0, BW, BH);
-  bgX.fillStyle = "#eef8f2";
+  bgX.fillStyle = "#0a1628";
   bgX.fillRect(0, 0, BW, BH);
   blobs.forEach((b) => {
     b.x += b.vx;
@@ -97,7 +97,7 @@ function drawBG() {
     if (a < 0.003) return;
     bgX.beginPath();
     bgX.arc(m.x * BW, m.y * BH, m.r, 0, Math.PI * 2);
-    bgX.fillStyle = `hsla(${m.hue},40%,46%,${a})`;
+    bgX.fillStyle = `hsla(${m.hue},50%,55%,${a})`;
     bgX.fill();
   });
 }
@@ -120,7 +120,7 @@ function mkBubble() {
     r: rnd(3, 14),
     vx: Math.cos(a) * rnd(0.12, 0.36),
     vy: Math.sin(a) * rnd(0.12, 0.36) - rnd(0.06, 0.22),
-    hue: rnd(132, 162),
+    hue: rnd(202, 232),
     alpha: rnd(0.22, 0.68),
     life: rnd(0, 1),
     decay: rnd(0.005, 0.012),
@@ -146,7 +146,7 @@ function drawBubbles() {
     if (a < 0.005) return;
     bubX.beginPath();
     bubX.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-    bubX.strokeStyle = `hsla(${b.hue},58%,50%,${a * 0.88})`;
+    bubX.strokeStyle = `hsla(${b.hue},65%,60%,${a * 0.88})`;
     bubX.lineWidth = 1.1;
     bubX.stroke();
     const ig = bubX.createRadialGradient(
@@ -193,7 +193,7 @@ function drawRing(val) {
 
   ringX.beginPath();
   ringX.arc(cx, cy, R, 0, Math.PI * 2);
-  ringX.strokeStyle = "rgba(42,168,102,.09)";
+  ringX.strokeStyle = "rgba(58,139,235,.15)";
   ringX.lineWidth = 1.3;
   ringX.stroke();
 
@@ -209,7 +209,7 @@ function drawRing(val) {
     ringX.setLineDash(dash);
     ringX.beginPath();
     ringX.arc(0, 0, r, 0, Math.PI * 2);
-    ringX.strokeStyle = `rgba(38,155,88,${op})`;
+    ringX.strokeStyle = `rgba(58,139,235,${op})`;
     ringX.lineWidth = 0.78;
     ringX.stroke();
     ringX.setLineDash([]);
@@ -225,7 +225,7 @@ function drawRing(val) {
       cx + Math.cos(a) * (R + (isL ? 9 : 4)),
       cy + Math.sin(a) * (R + (isL ? 9 : 4)),
     );
-    ringX.strokeStyle = `rgba(36,150,85,${isL ? 0.19 : 0.08})`;
+    ringX.strokeStyle = `rgba(58,139,235,${isL ? 0.25 : 0.1})`;
     ringX.lineWidth = isL ? 1.1 : 0.58;
     ringX.stroke();
   }
@@ -235,10 +235,10 @@ function drawRing(val) {
     ea = sa + frac * Math.PI * 1.5;
   ringX.save();
   ringX.shadowBlur = 11;
-  ringX.shadowColor = "rgba(38,180,100,.20)";
+  ringX.shadowColor = "rgba(58,139,235,.35)";
   ringX.beginPath();
   ringX.arc(cx, cy, R, sa, ea);
-  ringX.strokeStyle = "rgba(34,172,96,.64)";
+  ringX.strokeStyle = "rgba(58,139,235,.75)";
   ringX.lineWidth = 2.6;
   ringX.lineCap = "round";
   ringX.stroke();
@@ -249,11 +249,11 @@ function drawRing(val) {
       ey = cy + Math.sin(ea) * R;
     ringX.beginPath();
     ringX.arc(ex, ey, 4.5, 0, Math.PI * 2);
-    ringX.fillStyle = "rgba(34,182,100,.90)";
+    ringX.fillStyle = "rgba(58,139,235,.90)";
     ringX.fill();
     ringX.beginPath();
     ringX.arc(ex, ey, 9, 0, Math.PI * 2);
-    ringX.fillStyle = "rgba(34,182,100,.13)";
+    ringX.fillStyle = "rgba(58,139,235,.18)";
     ringX.fill();
   }
 }
@@ -279,9 +279,9 @@ setTimeout(() => {
 //  DATA & REALTIME
 // ════════════════════════════════════════
 const LEVELS = [
-  { min: 2000, label: "森林瀑布", color: "#189858" },
-  { min: 500, label: "城市公园", color: "#987010" },
-  { min: 0, label: "城市住宅", color: "#ae3c2c" },
+  { min: 2000, label: "森林瀑布", color: "#5aafff" },
+  { min: 500, label: "城市公园", color: "#e0b050" },
+  { min: 0, label: "城市住宅", color: "#e06050" },
 ];
 const getLevel = (v) =>
   LEVELS.find((l) => v >= l.min) || LEVELS[LEVELS.length - 1];
@@ -306,7 +306,7 @@ function updateDisplay(val) {
   const lv = getLevel(val),
     tag = document.getElementById("levelTag");
   tag.textContent = lv.label;
-  tag.style.cssText = `margin-top:14px;font-size:11.5px;letter-spacing:.15em;padding:5px 20px;border-radius:20px;background:rgba(255,255,255,.68);border:1px solid ${lv.color}30;color:${lv.color};transition:all .5s;backdrop-filter:blur(10px);`;
+  tag.style.cssText = `margin-top:14px;font-size:11.5px;letter-spacing:.15em;padding:5px 20px;border-radius:20px;background:rgba(15,35,70,.7);border:1px solid ${lv.color}40;color:${lv.color};transition:all .5s;backdrop-filter:blur(10px);`;
 }
 
 updateDisplay(curVal);
@@ -419,7 +419,7 @@ function drawChart(upto) {
     ty = (v) => P.t + ch - ((v - mn) / (mx - mn)) * ch;
 
   // grid
-  CX.strokeStyle = "rgba(42,168,102,.08)";
+  CX.strokeStyle = "rgba(58,139,235,.1)";
   CX.lineWidth = 1;
   for (let g = 0; g <= 4; g++) {
     const y = P.t + (g / 4) * ch;
@@ -427,7 +427,7 @@ function drawChart(upto) {
     CX.moveTo(P.l, y);
     CX.lineTo(W - P.r, y);
     CX.stroke();
-    CX.fillStyle = "rgba(10,80,44,.28)";
+    CX.fillStyle = "rgba(140,185,235,.4)";
     CX.font = "10px Noto Sans SC";
     CX.textAlign = "right";
     CX.fillText(
@@ -439,8 +439,8 @@ function drawChart(upto) {
 
   // area
   const ag = CX.createLinearGradient(0, P.t, 0, H - P.b);
-  ag.addColorStop(0, "rgba(34,162,88,.13)");
-  ag.addColorStop(1, "rgba(34,162,88,.01)");
+  ag.addColorStop(0, "rgba(58,139,235,.18)");
+  ag.addColorStop(1, "rgba(58,139,235,.02)");
   CX.beginPath();
   CX.moveTo(tx(0), ty(sl[0]));
   for (let i = 1; i < sl.length; i++) {
@@ -455,9 +455,9 @@ function drawChart(upto) {
 
   // line
   const lg = CX.createLinearGradient(0, 0, W, 0);
-  lg.addColorStop(0, "#0a4828");
-  lg.addColorStop(0.5, "#1e9e58");
-  lg.addColorStop(1, "#42c87e");
+  lg.addColorStop(0, "#2a6adb");
+  lg.addColorStop(0.5, "#3b8beb");
+  lg.addColorStop(1, "#5aaaf8");
   CX.beginPath();
   CX.moveTo(tx(0), ty(sl[0]));
   for (let i = 1; i < sl.length; i++) {
@@ -466,7 +466,7 @@ function drawChart(upto) {
   }
   CX.save();
   CX.shadowBlur = 6;
-  CX.shadowColor = "rgba(34,162,88,.22)";
+  CX.shadowColor = "rgba(58,139,235,.35)";
   CX.strokeStyle = lg;
   CX.lineWidth = 2.2;
   CX.stroke();
@@ -477,29 +477,29 @@ function drawChart(upto) {
     ey = ty(sl[sl.length - 1]);
   CX.beginPath();
   CX.arc(ex, ey, 9, 0, Math.PI * 2);
-  CX.fillStyle = "rgba(34,162,88,.09)";
+  CX.fillStyle = "rgba(58,139,235,.15)";
   CX.fill();
   CX.beginPath();
   CX.arc(ex, ey, 4.2, 0, Math.PI * 2);
-  CX.fillStyle = "white";
+  CX.fillStyle = "#0a1628";
   CX.fill();
   CX.save();
   CX.shadowBlur = 7;
-  CX.shadowColor = "rgba(34,182,95,.48)";
+  CX.shadowColor = "rgba(58,139,235,.6)";
   CX.beginPath();
   CX.arc(ex, ey, 4.2, 0, Math.PI * 2);
-  CX.strokeStyle = "#1e9e58";
+  CX.strokeStyle = "#3b8beb";
   CX.lineWidth = 1.7;
   CX.stroke();
   CX.restore();
-  CX.fillStyle = "rgba(8,76,40,.38)";
+  CX.fillStyle = "rgba(140,200,255,.5)";
   CX.font = "9px Noto Sans SC";
   CX.textAlign = "center";
   CX.fillText("实时", ex, ey - 12);
 
   // x-labels
   const step = Math.ceil(sl.length / 6);
-  CX.fillStyle = "rgba(8,76,40,.24)";
+  CX.fillStyle = "rgba(140,185,235,.35)";
   CX.font = "10px Noto Sans SC";
   CX.textAlign = "center";
   for (let i = 0; i < sl.length; i += step)

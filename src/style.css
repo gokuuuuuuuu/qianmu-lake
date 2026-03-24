@@ -9,20 +9,20 @@
 }
 
 :root {
-  --g1: #c8e6d4;
-  --g3: #2aa868;
-  --g4: #186840;
-  --g5: #0b3820;
-  --soft: #78b494;
-  --pale: #ddf2e6;
-  --rule: #c8e6d4;
+  --g1: #1a3a5c;
+  --g3: #3b8beb;
+  --g4: #7ec0ff;
+  --g5: #e0ecf8;
+  --soft: #5a8ab8;
+  --pale: #1a2e48;
+  --rule: rgba(58, 130, 220, 0.15);
 }
 
 html,
 body {
   width: 100%;
   min-height: 100vh;
-  background: #eef8f2;
+  background: #0a1628;
   color: var(--g5);
   font-family: "Noto Sans SC", sans-serif;
   overflow-x: hidden;
@@ -86,10 +86,10 @@ body {
   font-size: 10.5px;
   letter-spacing: 0.2em;
   color: var(--soft);
-  border: 1px solid rgba(42, 168, 102, 0.22);
+  border: 1px solid rgba(58, 139, 235, 0.3);
   padding: 6px 18px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(10, 30, 60, 0.6);
 }
 .live-dot {
   width: 7px;
@@ -165,7 +165,7 @@ body {
   font-size: 76px;
   line-height: 1;
   color: var(--g5);
-  filter: drop-shadow(0 2px 14px rgba(42, 168, 102, 0.18));
+  filter: drop-shadow(0 2px 14px rgba(58, 139, 235, 0.35));
   transition: color 0.4s;
 }
 .meter-unit {
@@ -181,8 +181,8 @@ body {
   letter-spacing: 0.15em;
   padding: 5px 20px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(42, 168, 102, 0.24);
+  background: rgba(15, 35, 70, 0.7);
+  border: 1px solid rgba(58, 139, 235, 0.3);
   color: var(--g4);
   transition: all 0.5s;
   backdrop-filter: blur(10px);
@@ -253,7 +253,7 @@ body {
   font-size: 10.5px;
   padding: 5px 14px;
   border-radius: 9px;
-  border: 1px solid rgba(42, 168, 102, 0.22);
+  border: 1px solid rgba(58, 139, 235, 0.25);
   background: transparent;
   color: var(--soft);
   cursor: pointer;
@@ -262,8 +262,8 @@ body {
 }
 .c-btn:hover,
 .c-btn.active {
-  background: rgba(42, 168, 102, 0.1);
-  border-color: rgba(42, 168, 102, 0.42);
+  background: rgba(58, 139, 235, 0.15);
+  border-color: rgba(58, 139, 235, 0.5);
   color: var(--g4);
 }
 #chartCanvas {
@@ -285,8 +285,8 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid rgba(42, 168, 102, 0.26);
-  background: rgba(42, 168, 102, 0.07);
+  border: 1px solid rgba(58, 139, 235, 0.3);
+  background: rgba(58, 139, 235, 0.1);
   color: var(--g4);
   cursor: pointer;
   display: flex;
@@ -297,7 +297,7 @@ body {
   flex-shrink: 0;
 }
 .play-btn:hover {
-  background: rgba(42, 168, 102, 0.18);
+  background: rgba(58, 139, 235, 0.25);
 }
 .tl-track {
   flex: 1;
@@ -320,9 +320,9 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: white;
+  background: #0a1628;
   border: 2px solid var(--g3);
-  box-shadow: 0 0 6px rgba(42, 168, 102, 0.36);
+  box-shadow: 0 0 6px rgba(58, 139, 235, 0.5);
   left: 0%;
 }
 .tl-time {
@@ -394,19 +394,19 @@ body {
   border-radius: 12px;
 }
 .sc-eff.g {
-  color: var(--g3);
-  background: rgba(42, 168, 102, 0.08);
-  border: 1px solid rgba(42, 168, 102, 0.18);
+  color: #5aafff;
+  background: rgba(58, 139, 235, 0.12);
+  border: 1px solid rgba(58, 139, 235, 0.3);
 }
 .sc-eff.n {
-  color: #9a6c10;
-  background: rgba(154, 108, 16, 0.07);
-  border: 1px solid rgba(154, 108, 16, 0.18);
+  color: #e0b050;
+  background: rgba(224, 176, 80, 0.1);
+  border: 1px solid rgba(224, 176, 80, 0.25);
 }
 .sc-eff.b {
-  color: #aa3828;
-  background: rgba(170, 56, 40, 0.07);
-  border: 1px solid rgba(170, 56, 40, 0.18);
+  color: #e06050;
+  background: rgba(224, 96, 80, 0.1);
+  border: 1px solid rgba(224, 96, 80, 0.25);
 }
 .sc-bars {
   display: flex;
@@ -422,7 +422,7 @@ body {
   flex: 1;
   height: 9px;
   border-radius: 5px;
-  background: rgba(42, 168, 102, 0.08);
+  background: rgba(58, 139, 235, 0.1);
   overflow: hidden;
 }
 .sc-bar-fill {
@@ -432,32 +432,32 @@ body {
   animation: barIn 1.4s ease both;
 }
 .bf1 {
-  background: linear-gradient(90deg, #0a4828, #2cb870);
+  background: linear-gradient(90deg, #1a4a8a, #3b8beb);
   width: 100%;
   animation-delay: 0.1s;
 }
 .bf2 {
-  background: linear-gradient(90deg, #1a7848, #40cc88);
+  background: linear-gradient(90deg, #1e5a9a, #4a9af5);
   width: 62%;
   animation-delay: 0.16s;
 }
 .bf3 {
-  background: linear-gradient(90deg, #2dba78, #78e4a8);
+  background: linear-gradient(90deg, #2a6aaa, #5aaaf8);
   width: 46%;
   animation-delay: 0.22s;
 }
 .bf4 {
-  background: linear-gradient(90deg, #64d8a0, #b0eccb);
+  background: linear-gradient(90deg, #3a7abb, #7ac0ff);
   width: 33%;
   animation-delay: 0.28s;
 }
 .bf5 {
-  background: linear-gradient(90deg, #d4a030, #ecc060);
+  background: linear-gradient(90deg, #b08828, #e0b050);
   width: 19%;
   animation-delay: 0.34s;
 }
 .bf6 {
-  background: linear-gradient(90deg, #d45040, #ec8870);
+  background: linear-gradient(90deg, #c04838, #e06858);
   width: 7%;
   animation-delay: 0.4s;
 }
