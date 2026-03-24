@@ -1,5 +1,4 @@
 import "./style.css";
-import { io } from "socket.io-client";
 
 ("use strict");
 
@@ -330,33 +329,23 @@ function dismissLoading() {
   }, 300);
 }
 
-// ── Socket.IO 实时连接 ──
-const socket = io();
+// ── 本地模拟数据（3300-4100） ──
+function randomIonValue() {
+  return Math.round(3300 + Math.random() * 800);
+}
 
-socket.on("connect", () => {
-  console.log("[Socket.IO] 已连接");
-  if (ldProgBar) ldProgBar.style.width = "60%";
-});
+function formatTime(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
+}
 
-socket.on("ws-message", (msg) => {
-  try {
-    const data = JSON.parse(msg);
-    const value = Number(data.ion_value) || 0;
-    const updateTime = data.update_time || new Date().toLocaleString("zh-CN");
-    updateDisplay(value);
-    pushLive(value);
-    document.getElementById("updateTime").textContent = updateTime;
-    document.getElementById("topTime").textContent = updateTime;
-    // 收到第二条数据（折线图开始绘制）后关闭加载页
-    if (cD.length >= 2) dismissLoading();
-  } catch (e) {
-    console.warn("[Socket.IO] 消息解析失败", e);
-  }
-});
-
-socket.on("disconnect", () => {
-  console.log("[Socket.IO] 连接断开，自动重连中...");
-});
+function pushFakeData() {
+  const value = randomIonValue();
+  const updateTime = formatTime(new Date());
+  updateDisplay(value);
+  pushLive(value);
+  document.getElementById("updateTime").textContent = updateTime;
+  document.getElementById("topTime").textContent = updateTime;
+}
 
 // ════════════════════════════════════════
 //  CHART
@@ -562,3 +551,12 @@ setTimeout(() => {
   drawChart(pbI);
 }, 100);
 addEventListener("resize", () => setTimeout(resizeChart, 100));
+
+// ── 启动模拟数据（3300-4100） ──
+if (ldProgBar) ldProgBar.style.width = "60%";
+// 先静默推两条数据填充图表，但不关闭加载页
+pushFakeData();
+setTimeout(() => pushFakeData(), 200);
+// 2秒后再关闭加载页
+setTimeout(dismissLoading, 2000);
+setInterval(pushFakeData, 2000);
